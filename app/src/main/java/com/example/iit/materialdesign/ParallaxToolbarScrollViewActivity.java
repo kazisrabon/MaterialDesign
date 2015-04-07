@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -14,6 +15,17 @@ import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
+import com.mikepenz.iconics.typeface.FontAwesome;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SectionDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IProfile;
+import com.mikepenz.materialdrawer.model.interfaces.Nameable;
+import com.mikepenz.materialdrawer.util.KeyboardUtil;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 
@@ -22,6 +34,8 @@ import com.nineoldandroids.view.ViewPropertyAnimator;
  */
 public class ParallaxToolbarScrollViewActivity extends BaseActivity implements ObservableScrollViewCallbacks {
 
+    private AccountHeader.Result headerResult;
+    private Drawer.Result result = null;
     private View mImageView;
     private View mToolbarView;
     private ObservableScrollView mScrollView;
@@ -57,7 +71,7 @@ public class ParallaxToolbarScrollViewActivity extends BaseActivity implements O
             @Override
             public void onClick(View v) {
                 Toast.makeText(ParallaxToolbarScrollViewActivity.this, "FAB is clicked", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getBaseContext(), StickyHeaderRecyclerViewActivity.class));
+//                startActivity(new Intent(getBaseContext(), StickyHeaderRecyclerViewActivity.class));
             }
         });
         mFabMargin = getResources().getDimensionPixelSize(R.dimen.margin_standard);
@@ -65,6 +79,65 @@ public class ParallaxToolbarScrollViewActivity extends BaseActivity implements O
         ViewHelper.setScaleY(mFab, 0);
 
         mParallaxImageHeight = getResources().getDimensionPixelSize(R.dimen.parallax_image_height);
+
+        headerResult = new AccountHeader()
+                .withActivity(this)
+                .withHeaderBackground(R.drawable.header)
+                .addProfiles(
+                        new ProfileDrawerItem().withName("Name").withEmail("mail@gmail.com").withIcon(getResources().getDrawable(R.drawable.profile4))
+                )
+                .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
+                    @Override
+                    public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
+                        return false;
+                    }
+                })
+                .build();
+
+        result = new Drawer()
+                .withActivity(this)
+                .withToolbar((Toolbar) findViewById(R.id.toolbar))
+                .withHeader(R.layout.drawer_header)
+                .withAccountHeader(headerResult)
+                .addDrawerItems(
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(FontAwesome.Icon.faw_home).withIdentifier(1),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_free_play).withIcon(FontAwesome.Icon.faw_gamepad).withIdentifier(2),
+                        new SectionDrawerItem().withName(R.string.drawer_item_section_header),
+                        new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(3)
+                )
+                .withOnDrawerListener(new Drawer.OnDrawerListener() {
+                    @Override
+                    public void onDrawerOpened(View drawerView) {
+                        Toast.makeText(ParallaxToolbarScrollViewActivity.this, "onDrawerOpened", Toast.LENGTH_SHORT).show();
+                        KeyboardUtil.hideKeyboard(ParallaxToolbarScrollViewActivity.this);
+                    }
+
+                    @Override
+                    public void onDrawerClosed(View drawerView) {
+                        Toast.makeText(ParallaxToolbarScrollViewActivity.this, "onDrawerClosed", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
+
+                        if (drawerItem != null && drawerItem instanceof Nameable) {
+//                            getSupportActionBar().setTitle(((Nameable) drawerItem).getNameRes());
+
+                            if (drawerItem.getIdentifier() == 1) {
+                                startActivity(new Intent(getBaseContext(), FlexibleSpaceWithImageScrollViewActivity.class));
+                            } else if (drawerItem.getIdentifier() == 2) {
+//                                startActivity(new Intent(getBaseContext(), GraphFragment.class));
+                            } else if (drawerItem.getIdentifier() == 3) {
+                                startActivity(new Intent(getBaseContext(), StickyHeaderRecyclerViewActivity.class));
+                            }
+                        }
+                    }
+                })
+                .withFireOnInitialOnClick(true)
+                .withSavedInstance(savedInstanceState)
+                .withSelectedItem(1)
+                .build();
     }
 
     @Override

@@ -28,7 +28,9 @@ public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAd
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(mInflater.inflate(android.R.layout.simple_list_item_1, parent, false));
+        View view = mInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+//        view.setOnClickListener();    //onClickListener for Recycler View
+        return new ViewHolder(view);
     }
 
     @Override
