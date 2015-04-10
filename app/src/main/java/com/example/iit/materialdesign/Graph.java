@@ -1,6 +1,5 @@
 package com.example.iit.materialdesign;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -30,7 +29,6 @@ import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.DataPointInterface;
-import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.OnDataPointTapListener;
 import com.jjoe64.graphview.series.Series;
 import com.mikepenz.iconics.typeface.FontAwesome;
@@ -53,7 +51,7 @@ import java.util.List;
 /**
  * Created by IIT on 4/8/2015.
  */
-public class FlexibleSpaceWithImageScrollViewActivity extends BaseActivity implements ObservableScrollViewCallbacks {
+public class Graph extends BaseActivity implements ObservableScrollViewCallbacks {
 
     private static final float MAX_TEXT_SCALE_DELTA = 0.3f;
     private static final boolean TOOLBAR_IS_STICKY = false;
@@ -63,49 +61,29 @@ public class FlexibleSpaceWithImageScrollViewActivity extends BaseActivity imple
     private View mOverlayView;
     private ObservableScrollView mScrollView;
     private TextView mTitleView, mDetailsView;
-    private View mFab;
     private int mActionBarSize;
-    private int mFlexibleSpaceShowFabOffset;
     private int mFlexibleSpaceImageHeight;
-    private int mFabMargin;
     private int mToolbarColor;
-    private boolean mFabIsShown;
     private AccountHeader.Result headerResult;
     private Drawer.Result result = null;
     private MyDB datasource;
     List<Comment> values;
-//    Comment comment = null;
-    ArrayAdapter<Comment> adapter;
-    SharedPreferences id;
-    int i;
-    String name, starName, starFlux;
-    ArrayList<StarDataObject> tableOfDatas;
-    StarDataObject starDataObject = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_flexiblespacewithimagescrollview);
+        setContentView(R.layout.graph);
 
         // Modify it
        // new AsyncClass(this).execute();
 
-        startService(new Intent(getApplicationContext(), WebData.class));
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        id = getSharedPreferences("id", MODE_PRIVATE);
-        final SharedPreferences.Editor editor = id.edit();
-//        Context context
-        name = getIntent().getStringExtra("position");
-//        editor.clear();
 
         datasource = new MyDB(this);
         datasource.open();
         values = datasource.getAllComments();
-        Log.e("Flexible", values.toString());
-//        comment = new Comment("", "");
 
         mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
-        mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
         mActionBarSize = getActionBarSize();
         mToolbarColor = getResources().getColor(R.color.primary);
 
@@ -121,22 +99,6 @@ public class FlexibleSpaceWithImageScrollViewActivity extends BaseActivity imple
         mDetailsView = (TextView)findViewById(R.id.details);
 //        mTitleView.setText(name);
         setTitle(null);
-        mFab = findViewById(R.id.fab);
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(FlexibleSpaceWithImageScrollViewActivity.this, "FAB is clicked", Toast.LENGTH_SHORT).show();
-                i= id.getInt("key",0);
-                Log.e("key", i+" "+starName);
-                datasource.createComment( starName, starFlux);
-                editor.putInt("key", i++);
-                editor.apply();
-
-            }
-        });
-        mFabMargin = getResources().getDimensionPixelSize(R.dimen.margin_standard);
-        ViewHelper.setScaleX(mFab, 0);
-        ViewHelper.setScaleY(mFab, 0);
 
         ScrollUtils.addOnGlobalLayoutListener(mScrollView, new Runnable() {
             @Override
@@ -173,13 +135,13 @@ public class FlexibleSpaceWithImageScrollViewActivity extends BaseActivity imple
                 .withOnDrawerListener(new Drawer.OnDrawerListener() {
                     @Override
                     public void onDrawerOpened(View drawerView) {
-                        Toast.makeText(FlexibleSpaceWithImageScrollViewActivity.this, "onDrawerOpened", Toast.LENGTH_SHORT).show();
-                        KeyboardUtil.hideKeyboard(FlexibleSpaceWithImageScrollViewActivity.this);
+                        Toast.makeText(Graph.this, "onDrawerOpened", Toast.LENGTH_SHORT).show();
+                        KeyboardUtil.hideKeyboard(Graph.this);
                     }
 
                     @Override
                     public void onDrawerClosed(View drawerView) {
-                        Toast.makeText(FlexibleSpaceWithImageScrollViewActivity.this, "onDrawerClosed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Graph.this, "onDrawerClosed", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
@@ -203,116 +165,7 @@ public class FlexibleSpaceWithImageScrollViewActivity extends BaseActivity imple
                 .withSavedInstance(savedInstanceState)
                 .withSelectedItem(0)
                 .build();
-        initiateValue();
-    }
-
-    private void initiateValue() {
-        WebData webData = new WebData();
-        if(Integer.parseInt(name) == 1){
-            mTitleView.setText(getResources().getString(R.string.Name1));
-            mDetailsView.setText(getResources().getString(R.string.Descrition1));
-            starName= getResources().getString(R.string.a);
-            if(webData.getFlux(starName)!=null)
-                starFlux=webData.getFlux(starName);
-        }
-        else if(Integer.parseInt(name) == 2){
-            mTitleView.setText(getResources().getString(R.string.Name2));
-            mDetailsView.setText(getResources().getString(R.string.Description2));
-            starName= getResources().getString(R.string.b);
-            if(webData.getFlux(starName)!=null)
-                starFlux=webData.getFlux(starName);
-        }
-        else if(Integer.parseInt(name) == 3){
-            mTitleView.setText(getResources().getString(R.string.Name3));
-            mDetailsView.setText(getResources().getString(R.string.Description3));
-            starName= getResources().getString(R.string.c);
-            if(webData.getFlux(starName)!=null)
-                starFlux=webData.getFlux(starName);
-        }
-        else if(Integer.parseInt(name) == 4){
-            mTitleView.setText(getResources().getString(R.string.Name4));
-            mDetailsView.setText(getResources().getString(R.string.Description4));
-            starName= getResources().getString(R.string.d);
-            if(webData.getFlux(starName)!=null)
-                starFlux=webData.getFlux(starName);
-        }
-        else if(Integer.parseInt(name) == 5){
-            mTitleView.setText(getResources().getString(R.string.Name5));
-            mDetailsView.setText(getResources().getString(R.string.Description5));
-            starName= getResources().getString(R.string.e);
-            if(webData.getFlux(starName)!=null)
-                starFlux=webData.getFlux(starName);
-        }
-        else if(Integer.parseInt(name) == 6){
-            mTitleView.setText(getResources().getString(R.string.Name6));
-            mDetailsView.setText(getResources().getString(R.string.Description6));
-            starName= getResources().getString(R.string.f);
-            if(webData.getFlux(starName)!=null)
-                starFlux=webData.getFlux(starName);
-        }
-
-        else if(Integer.parseInt(name) == 7) {
-            mTitleView.setText("Cyg X-2");
-            starName= getResources().getString(R.string.g);
-            if(webData.getFlux(starName)!=null)
-                starFlux=webData.getFlux(starName);
-        }
-
-        else if(Integer.parseInt(name) == 8){
-            mTitleView.setText(getResources().getString(R.string.Name8));
-            mDetailsView.setText(getResources().getString(R.string.Description8));
-            starName= getResources().getString(R.string.h);
-            if(webData.getFlux(starName)!=null)
-                starFlux=webData.getFlux(starName);
-        }
-
-        else if(Integer.parseInt(name) == 9){
-            mTitleView.setText(getResources().getString(R.string.Name9));
-            mDetailsView.setText(getResources().getString(R.string.Description9));
-            starName= getResources().getString(R.string.i);
-            if(webData.getFlux(starName)!=null)
-                starFlux=webData.getFlux(starName);
-        }
-
-        else if(Integer.parseInt(name) == 10){
-            mTitleView.setText(getResources().getString(R.string.Name10));
-            mDetailsView.setText(getResources().getString(R.string.Description10));
-            starName= getResources().getString(R.string.j);
-            if(webData.getFlux(starName)!=null)
-                starFlux=webData.getFlux(starName);
-        }
-        else if(Integer.parseInt(name) == 11){
-            mTitleView.setText(getResources().getString(R.string.Name11));
-            mDetailsView.setText(getResources().getString(R.string.Description11));
-            starName= getResources().getString(R.string.k);
-            if(webData.getFlux(starName)!=null)
-                starFlux=webData.getFlux(starName);
-        }
-
-        else if(Integer.parseInt(name) == 12){
-            mTitleView.setText(getResources().getString(R.string.Name12));
-            mDetailsView.setText(getResources().getString(R.string.Description12));
-        }
-
-        else {
-            mTitleView.setText("GX 3+1");
-            starName= getResources().getString(R.string.l);
-            if(webData.getFlux(starName)!=null)
-                starFlux=webData.getFlux(starName);
-        }
-    }
-
-    public String getFlux(String name){
-
-        if(tableOfDatas != null){
-            for(int j=0; j<tableOfDatas.size(); j++){
-                starDataObject = tableOfDatas.get(j);
-                if(name.equals(starDataObject.getName())){
-                    return starDataObject.getFlux();
-                }
-            }
-        }
-        return "0";
+        generateGraph();
     }
 
 
@@ -342,31 +195,6 @@ public class FlexibleSpaceWithImageScrollViewActivity extends BaseActivity imple
         }
         ViewHelper.setTranslationY(mTitleView, titleTranslationY);
 
-        // Translate FAB
-        int maxFabTranslationY = mFlexibleSpaceImageHeight - mFab.getHeight() / 2;
-        float fabTranslationY = ScrollUtils.getFloat(
-                -scrollY + mFlexibleSpaceImageHeight - mFab.getHeight() / 2,
-                mActionBarSize - mFab.getHeight() / 2,
-                maxFabTranslationY);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-            // On pre-honeycomb, ViewHelper.setTranslationX/Y does not set margin,
-            // which causes FAB's OnClickListener not working.
-            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mFab.getLayoutParams();
-            lp.leftMargin = mOverlayView.getWidth() - mFabMargin - mFab.getWidth();
-            lp.topMargin = (int) fabTranslationY;
-            mFab.requestLayout();
-        } else {
-            ViewHelper.setTranslationX(mFab, mOverlayView.getWidth() - mFabMargin - mFab.getWidth());
-            ViewHelper.setTranslationY(mFab, fabTranslationY);
-        }
-
-        // Show/hide FAB
-        if (fabTranslationY < mFlexibleSpaceShowFabOffset) {
-            hideFab();
-        } else {
-            showFab();
-        }
-
         if (TOOLBAR_IS_STICKY) {
             // Change alpha of toolbar background
             if (-scrollY + mFlexibleSpaceImageHeight <= mActionBarSize) {
@@ -391,39 +219,44 @@ public class FlexibleSpaceWithImageScrollViewActivity extends BaseActivity imple
     @Override
     public void onUpOrCancelMotionEvent(ScrollState scrollState) {
     }
+    private void generateGraph() {
+        GraphView graph = (GraphView) findViewById(R.id.graph3);
+        BarGraphSeries<DataPoint> series = new BarGraphSeries<DataPoint>(new DataPoint[] {
+                new DataPoint(0, 0),
+                new DataPoint(1, 14994),
+                new DataPoint(2, 1222),
+                new DataPoint(3, 31018),
+                new DataPoint(4, 781),
+                new DataPoint(5, 739)
+        });
+        graph.addSeries(series);
 
-    private void showFab() {
-        if (!mFabIsShown) {
-            ViewPropertyAnimator.animate(mFab).cancel();
-            ViewPropertyAnimator.animate(mFab).scaleX(1).scaleY(1).setDuration(200).start();
-            mFabIsShown = true;
-        }
-    }
+// styling
+        series.setValueDependentColor(new ValueDependentColor<DataPoint>() {
+            @Override
+            public int get(DataPoint data) {
+                return Color.rgb((int) data.getX() * 255 / 4, (int) Math.abs(data.getY() * 255 / 6), 100);
+            }
+        });
 
-    private void hideFab() {
-        if (mFabIsShown) {
-            ViewPropertyAnimator.animate(mFab).cancel();
-            ViewPropertyAnimator.animate(mFab).scaleX(0).scaleY(0).setDuration(200).start();
-            mFabIsShown = false;
-        }
-    }
+        series.setOnDataPointTapListener(new OnDataPointTapListener() {
+            @Override
+            public void onTap(Series series, DataPointInterface dataPoint) {
+                Toast.makeText(getBaseContext(), "Series1: On Data Point clicked: " + dataPoint, Toast.LENGTH_SHORT).show();
+            }
+        });
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
+        series.setSpacing(50);
 
-        return super.onCreateOptionsMenu(menu);
-    }
+// draw values on top
+        series.setDrawValuesOnTop(true);
+        series.setValuesOnTopColor(Color.RED);
+//series.setValuesOnTopSize(50);
+        // use static labels for horizontal and vertical labels
+        StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
+        staticLabelsFormatter.setHorizontalLabels(new String[] {"", "Sco X-1", "GX 5-1", "Crab", "GX 17+2", "GX 349+2"});
+//        staticLabelsFormatter.setVerticalLabels(new String[] {"low", "middle", "high"});
+        graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.delete:
-                datasource.deleteComment(starName);
-
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

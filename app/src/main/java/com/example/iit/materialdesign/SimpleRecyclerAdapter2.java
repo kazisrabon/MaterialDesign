@@ -12,11 +12,11 @@ import java.util.ArrayList;
 /**
  * Created by IIT on 4/8/2015.
  */
-public class SimpleRecyclerAdapter extends RecyclerView.Adapter<SimpleRecyclerAdapter.ViewHolder> {
+public class SimpleRecyclerAdapter2 extends RecyclerView.Adapter<SimpleRecyclerAdapter2.ViewHolder> {
     private LayoutInflater mInflater;
     private ArrayList<String> mItems;
 
-    public SimpleRecyclerAdapter(Context context, ArrayList<String> items) {
+    public SimpleRecyclerAdapter2(Context context, ArrayList<String> items) {
         mInflater = LayoutInflater.from(context);
         mItems = items;
     }

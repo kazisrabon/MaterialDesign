@@ -15,7 +15,7 @@ import java.util.ArrayList;
 /**
  * Created by IIT on 4/8/2015.
  */
-public class SimpleHeaderRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class SimpleHeaderRecyclerAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int VIEW_TYPE_HEADER = 0;
     private static final int VIEW_TYPE_ITEM = 1;
 
@@ -24,7 +24,7 @@ public class SimpleHeaderRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
     private View mHeaderView;
     private static Context context;
 
-    public SimpleHeaderRecyclerAdapter(Context context, ArrayList<String> items, View headerView) {
+    public SimpleHeaderRecyclerAdapter2(Context context, ArrayList<String> items, View headerView) {
         mInflater = LayoutInflater.from(context);
         mItems = items;
         mHeaderView = headerView;
@@ -67,18 +67,21 @@ public class SimpleHeaderRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
         if (viewHolder instanceof ItemViewHolder) {
+            final String name = mItems.get(position - 1);
+            Log.e("Favorite listview", name);
             ((ItemViewHolder) viewHolder).textView.setText(mItems.get(position - 1));
             ((ItemViewHolder) viewHolder).textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     if(context != null){
-                        Toast.makeText(context, "hlw", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(context, FlexibleSpaceWithImageScrollViewActivity.class);
-                        intent.putExtra("position", position+"");
+//                        Toast.makeText(context, "hlw"+name, Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(context, ParallaxToolbarScrollViewActivity.class);
+                        intent.putExtra("position2", name);
                         context.startActivity(intent);
                     }
 //                    Toast.makeText(context, position, Toast.LENGTH_LONG).show();
-                    Log.e("asss", position+"");
+
                 }
             });
         }

@@ -48,7 +48,7 @@
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/margin_standard"
             android:paddingRight="@dimen/margin_standard"
-            android:text="@string/all_stars"
+            android:text="@string/favourite"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/white" />
     </LinearLayout>

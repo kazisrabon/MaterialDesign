@@ -6,9 +6,11 @@ import android.os.Bundle;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
@@ -47,6 +49,8 @@ public class ParallaxToolbarScrollViewActivity extends BaseActivity implements O
     private int mFabMargin;
     private int mToolbarColor;
     private boolean mFabIsShown;
+    TextView body;
+    String name, flux;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +59,9 @@ public class ParallaxToolbarScrollViewActivity extends BaseActivity implements O
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
+        body = (TextView)findViewById(R.id.body);
+        name = getIntent().getStringExtra("position2");
+        Log.e("Parallax", name);
         mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
         mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
         mActionBarSize = getActionBarSize();
@@ -70,7 +77,7 @@ public class ParallaxToolbarScrollViewActivity extends BaseActivity implements O
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ParallaxToolbarScrollViewActivity.this, "FAB is clicked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ParallaxToolbarScrollViewActivity.this, flux, Toast.LENGTH_SHORT).show();
 //                startActivity(new Intent(getBaseContext(), StickyHeaderRecyclerViewActivity.class));
             }
         });
@@ -138,6 +145,49 @@ public class ParallaxToolbarScrollViewActivity extends BaseActivity implements O
                 .withSavedInstance(savedInstanceState)
                 .withSelectedItem(1)
                 .build();
+        initiateValue();
+    }
+
+    private void initiateValue() {
+        if(name.equals("Sco X-1")){
+            body.setText(getResources().getString(R.string.Descrition1));
+            flux = "Today's Flux 14994";
+        }
+        else if(name.equals("GX 5-1")){
+            body.setText(getResources().getString(R.string.Description2));
+            flux = "Today's Flux 1222";
+        }
+        else if(name.equals("Crab")){
+            body.setText(getResources().getString(R.string.Description3));
+            flux = "Today's Flux 1018";
+        }
+        else if(name.equals("GX 17+2")){
+            body.setText(getResources().getString(R.string.Description4));
+            flux = "Today's Flux 781";
+        }
+        else if(name.equals("GX 349+2")){
+            body.setText(getResources().getString(R.string.Description5));
+            flux = "Today's Flux 739";
+        }
+        else if(name.equals("GX 9+1")){
+            body.setText(getResources().getString(R.string.Description6));
+            flux = "Today's Flux 578";
+        }
+        else if(name.equals("CGX 13+1")){
+            body.setText(getResources().getString(R.string.Description9));
+            flux = "Today's Flux 434";
+        }
+        else if(name.equals("GX 340+0")){
+            body.setText(getResources().getString(R.string.Description8));
+            flux = "Today's Flux 435";
+        }
+        else if(name.equals("GX 13+1")){
+            body.setText(getResources().getString(R.string.Description10));
+            flux = "Today's Flux 434";
+        }
+        else {
+            flux = "Today's Flux 302";
+        }
     }
 
     @Override
