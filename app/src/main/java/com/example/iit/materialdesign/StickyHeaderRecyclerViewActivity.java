@@ -80,8 +80,7 @@ public class StickyHeaderRecyclerViewActivity extends BaseActivity implements Ob
                 .addDrawerItems(
                         new PrimaryDrawerItem().withName(R.string.drawer_item_home).withIcon(FontAwesome.Icon.faw_home).withIdentifier(1),
                         new PrimaryDrawerItem().withName(R.string.drawer_item_free_play).withIcon(FontAwesome.Icon.faw_gamepad).withIdentifier(2),
-                        new SectionDrawerItem().withName(R.string.drawer_item_section_header),
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(3)
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(3)
                 )
                 .withOnDrawerListener(new Drawer.OnDrawerListener() {
                     @Override
@@ -103,9 +102,9 @@ public class StickyHeaderRecyclerViewActivity extends BaseActivity implements Ob
 //                            getSupportActionBar().setTitle(((Nameable) drawerItem).getNameRes());
 
                             if (drawerItem.getIdentifier() == 1) {
-                                startActivity(new Intent(getBaseContext(), FlexibleSpaceWithImageScrollViewActivity.class));
+                                startActivity(new Intent(getBaseContext(), Graph.class));
                             } else if (drawerItem.getIdentifier() == 2) {
-                                startActivity(new Intent(getBaseContext(), ParallaxToolbarScrollViewActivity.class));
+                                startActivity(new Intent(getBaseContext(), Favourite.class));
                             } else if (drawerItem.getIdentifier() == 3) {
 //                                startActivity(new Intent(getBaseContext(), BarChartActivity.class));
                             }
