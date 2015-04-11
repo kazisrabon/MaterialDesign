@@ -4,12 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/flexible_space_image_height"
-        android:scaleType="centerCrop"
-        android:src="@drawable/header" />
+    <!--<ImageView-->
+        <!--android:id="@+id/image"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/flexible_space_image_height"-->
+        <!--android:scaleType="centerCrop"-->
+        <!--android:layout_marginTop="-50dp"-->
+        <!--android:src="@drawable/header" />-->
 
     <View
         android:id="@+id/overlay"
@@ -73,18 +74,20 @@
             android:textColor="@android:color/white"
             android:textSize="20sp" />
 
+        <com.melnykov.fab.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:scaleType="center"
+            app:fab_colorNormal="@color/pink"
+            app:fab_colorPressed="@color/pink_pressed"
+            android:src="@mipmap/ic_add_white"/>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/flexible_space_image_height"
             android:background="@android:color/transparent" />
     </LinearLayout>
 
-    <com.melnykov.fab.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left|top"
-        android:scaleType="center"
-        app:fab_colorNormal="@color/pink"
-        app:fab_colorPressed="@color/pink_pressed" />
 </FrameLayout>
